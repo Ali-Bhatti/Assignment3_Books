@@ -35,9 +35,10 @@
                 android:id="@+id/bookName"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="45dp"
                 android:layout_marginBottom="8dp"
                 android:paddingLeft="3dp"
+                android:layout_marginStart="7dp"
                 android:text="Book Name"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
@@ -67,12 +68,13 @@
 
             <TextView
                 android:id="@+id/bookDetails"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginEnd="22dp"
+                android:paddingLeft="3dp"
                 android:text="description of Book"
-                app:layout_constraintEnd_toEndOf="@+id/level"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/level"
                 app:layout_constraintTop_toBottomOf="@+id/level" />
 
@@ -80,16 +82,14 @@
                 android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:layout_marginStart="155dp"
-                android:text="Button"
+                android:layout_marginTop="23dp"
                 android:background="@color/btncolor"
+                android:text="Button"
+                android:padding="3dp"
                 android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.82"
-                app:layout_constraintStart_toEndOf="@+id/bookImg"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintTop_toBottomOf="@+id/bookDetails" />
 
             <ImageView
                 android:id="@+id/forwordArrow"
@@ -102,7 +102,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.01999998"
-                tools:srcCompat="@drawable/nextarrow" />
+                app:srcCompat="@drawable/nextarrow" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
