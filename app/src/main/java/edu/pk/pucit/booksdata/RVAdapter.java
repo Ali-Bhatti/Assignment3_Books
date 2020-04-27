@@ -1,6 +1,9 @@
 package edu.pk.pucit.booksdata;
 
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
+
+import static android.content.Context.DOWNLOAD_SERVICE;
+import static androidx.core.content.ContextCompat.getSystemService;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> {
     Context context;
@@ -51,7 +58,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> {
 
     // Placing Data in Layout will be dine in this function
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         // Image loading is done by picasso
         Picasso.get().load(basePath + imgPaths[position]).into(holder.tv_bookImg);
 
@@ -66,11 +73,30 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> {
            // change the text of button to "DOWNLOAD"
             holder.tv_btn.setText("DOWNLOAD");
             // set click event on Button and then start downloading file through download manger
-
+            holder.tv_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String url = booksUrls[position];
+                    DownloadManager downloadManager = (DownloadManager)context.getSystemService(context.DOWNLOAD_SERVICE);
+                    Uri uri = Uri.parse(url);
+                    DownloadManager.Request request = new DownloadManager.Request(uri);
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                    Long ref = downloadManager.enqueue(request);
+                }
+            });
         }
         else{
             holder.tv_btn.setText("READ ONLINE");
             //set click event on Button and then move to google chorme to read book online
+            holder.tv_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String url = booksUrls[position];
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(url));
+                    ContextCompat.startActivity(context, intent, null);
+                }
+            });
         }
 
         Log.i("Text Binding" ,"In layout Done" );
