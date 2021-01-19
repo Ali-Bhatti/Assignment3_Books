@@ -1,2 +1,2 @@
-# Assignment3_Books
-This is MC assignment .Images of Books will be displayed. When you clicked on button , book will be opened.
+# Books of Python
+This is an android app which will help you to find differnt python books. When you will click on button(shown in the app), book will be opened.
