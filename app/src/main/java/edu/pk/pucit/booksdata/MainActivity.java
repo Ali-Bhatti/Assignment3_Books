@@ -6,18 +6,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView rv;
-
+    RVAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,11 +31,7 @@ public class MainActivity extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
 
         String json = "";
-        ArrayList<String> titles = new ArrayList<>();
-        ArrayList<String> levels = new ArrayList<>();
-        ArrayList<String> infos = new ArrayList<>();
-        ArrayList<String> urls = new ArrayList<>();
-        ArrayList<String> imgPaths = new ArrayList<>();
+        ArrayList<Book> booksArrayList = new ArrayList<Book>();
         try {
 
             InputStream is = getResources().openRawResource(R.raw.data);
@@ -40,19 +41,16 @@ public class MainActivity extends AppCompatActivity {
             while (is.read(data)!=-1){
                 //empty as nothing needs to be done here
             }
-            json = new String(data , "UTF-8");
-            Log.i("data.json","length => "+ json.length());
+            json = new String(data , StandardCharsets.UTF_8);
+            //Log.i("data.json","length => "+ json.length());
 
             JSONObject jsonObject = new JSONObject(json);
 
             JSONArray jsonArray = new JSONArray(jsonObject.getString("books"));
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
-                titles.add(obj.getString("title"));
-                levels.add(obj.getString("level"));
-                infos.add(obj.getString("info"));
-                urls.add(obj.getString("url"));
-                imgPaths.add(obj.getString("cover"));
+                booksArrayList.add(new Book(obj.getString("title"),obj.getString("level"),
+                        obj.getString("info"), obj.getString("url") ,obj.getString("cover") ));
             }
 
             //Toast.makeText(this, String.valueOf(titles.size()), Toast.LENGTH_LONG).show();
@@ -60,18 +58,32 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        String [] bookTitles = GetStringArray(titles);
-        String [] bookLevels = GetStringArray(levels);
-        String [] bookInfos = GetStringArray(infos);
-        String [] bookUrls = GetStringArray(urls);
-        String [] booksImgs = GetStringArray(imgPaths);
-
-        RVAdapter adapter = new RVAdapter(this,bookTitles ,bookLevels, bookInfos, bookUrls , booksImgs);
+        adapter = new RVAdapter(this,booksArrayList);
         rv.setAdapter(adapter);
 
     }
 
-    // Function to convert ArrayList<String> to String[]
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.app_bar_search);
+        SearchView searchView = (SearchView)searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                adapter.getFilter().filter(s);
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+    /*// Function to convert ArrayList<String> to String[]
     private String[] GetStringArray(ArrayList<String> arr)
     {
 
@@ -88,5 +100,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return str;
-    }
+    }*/
 }
