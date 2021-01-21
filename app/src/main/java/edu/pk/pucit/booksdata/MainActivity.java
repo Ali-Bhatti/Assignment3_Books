@@ -30,8 +30,7 @@ public class MainActivity extends AppCompatActivity {
         rv = findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        String json = "";
-        ArrayList<Book> booksArrayList = new ArrayList<Book>();
+        ArrayList<Book> booksArrayList = new ArrayList<>();
         try {
 
             InputStream is = getResources().openRawResource(R.raw.data);
@@ -41,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
             while (is.read(data)!=-1){
                 //empty as nothing needs to be done here
             }
-            json = new String(data , StandardCharsets.UTF_8);
+            String json;
+            json = new String(data, StandardCharsets.UTF_8);
             //Log.i("data.json","length => "+ json.length());
 
             JSONObject jsonObject = new JSONObject(json);
@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.search_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.app_bar_search);
         SearchView searchView = (SearchView)searchItem.getActionView();
+        searchView.setQueryHint("Search..");
+        searchView.setIconifiedByDefault(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
